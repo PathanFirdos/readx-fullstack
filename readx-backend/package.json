@@ -3,9 +3,12 @@
     "version": "1.0.0",
     "description": "Backend for ReadX app - Audiobooks, Ebooks, and Comics APIs",
     "main": "server.js",
+    "homepage": "https://firdospathan.github.io/readx-app",
     "scripts": {
         "start": "node server.js",
-        "dev": "nodemon server.js"
+        "dev": "nodemon server.js",
+        "predeploy": "npm run build",
+  "deploy": "gh-pages -d build"
     },
     "author": "Firdos Pathan",
     "license": "MIT",
