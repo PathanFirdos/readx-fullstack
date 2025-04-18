@@ -1,3 +1,5 @@
+// Dummy update to trigger Git
+
 import React from 'react';
 
 const ShippingAndDelivery = () => {
