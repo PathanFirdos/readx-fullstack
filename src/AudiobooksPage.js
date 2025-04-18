@@ -13,30 +13,32 @@ const AudiobooksPage = () => {
   }, []);
 
   return (
-    <div className="container mt-4">
-      <h2>Audiobooks</h2>
-      {categories.map((category, idx) => (
-        <div key={idx} className="mb-4">
-          <h4>{category.title}</h4>
-          <div className="d-flex flex-wrap gap-4">
-            {category.books.map((book, index) => (
-              <div key={index} style={{ width: "200px" }}>
-                <img
-                  src={book.image}
-                  alt={book.title}
-                  style={{ width: "100%", height: "auto", borderRadius: "8px" }}
-                />
-                <h6 className="mt-2">{book.title}</h6>
-                <p>
-                  <strong>{book.price}</strong>{" "}
-                  <del style={{ color: "gray" }}>{book.mrp}</del>
-                </p>
-              </div>
-            ))}
+    <div className="container-fluid mt-4">
+  <h2>Audiobooks</h2>
+  {categories.map((category, idx) => (
+    <div key={idx} className="mb-5">
+      <h4>{category.title}</h4>
+      <div className="row">
+        {category.books.map((book, index) => (
+          <div key={index} className="col-6 col-sm-4 col-md-3 col-lg-2 mb-4">
+            <img
+              src={book.image}
+              alt={book.title}
+              className="img-fluid rounded"
+              style={{ height: "250px", objectFit: "cover", width: "100%" }}
+            />
+            <h6 className="mt-2">{book.title}</h6>
+            <p>
+              <strong>{book.price}</strong>{" "}
+              <del style={{ color: "gray" }}>{book.mrp}</del>
+            </p>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
+  ))}
+</div>
+
   );
 };
 

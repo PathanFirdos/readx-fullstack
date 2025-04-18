@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -20,6 +19,12 @@ import Cancel from "./Cancel";
 import book1 from "./assets/book1.jpg";
 import book2 from "./assets/book2.jpg";
 import book3 from "./assets/book3.jpg";
+import Footer from "./Footer"; 
+import PrivacyPolicy from './PrivacyPolicy';
+import TermsAndConditions from './TermsAndConditions';
+import CancellationAndRefund from './CancellationAndRefund';
+import ShippingAndDelivery from './ShippingAndDelivery';
+import ContactUs from './ContactUs';
  
 
 // Sample Book Data
@@ -234,10 +239,6 @@ const ReadXApp = () => {
                 <NavDropdown.Item onClick={() => handleProfileNav("wishlist")}>Wishlist</NavDropdown.Item>
                 <NavDropdown.Item onClick={() => handleProfileNav("password")}>Change Password</NavDropdown.Item>
               </NavDropdown>
-
-              
-
-              
             </Nav>
           </Container>
         </Navbar>
@@ -249,6 +250,11 @@ const ReadXApp = () => {
         <Route path="/audiobooks" element={<AudiobooksPage />} />
 <Route path="/ebooks" element={<EbooksPage />} />
 <Route path="/comics" element={<ComicsPage />} />
+<Route path="/privacy-policy" element={<PrivacyPolicy />} />
+<Route path="/terms" element={<TermsAndConditions />} />
+<Route path="/cancellation-refund" element={<CancellationAndRefund />} />
+<Route path="/shipping-delivery" element={<ShippingAndDelivery />} />
+<Route path="/contact-us" element={<ContactUs />} />
 <Route path="/admin" element={<AdminPage />} />
         <Route path="/auth" element={<AuthPage setIsLoggedIn={setIsLoggedIn} />} />
         <Route
@@ -262,6 +268,9 @@ const ReadXApp = () => {
         <Route path="/payment-success" element={<Success />} />
         <Route path="/payment-cancel" element={<Cancel />} />
       </Routes>
+
+      {/* Footer always visible except on auth page */}
+      {location.pathname !== "/auth" && <Footer />}
     </>
   );
 };

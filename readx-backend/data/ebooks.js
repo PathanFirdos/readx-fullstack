@@ -14,6 +14,18 @@ const ebookCategories = [
           price: "₹180",
           mrp: "₹250",
         },
+        {
+          title: "Learning React",
+          image: "https://covers.openlibrary.org/b/id/11533263-L.jpg",
+          price: "₹350",
+          mrp: "₹450",
+        },
+        {
+          title: "You Don't Know JS",
+          image: "https://covers.openlibrary.org/b/id/10067399-L.jpg",
+          price: "₹420",
+          mrp: "₹500",
+        },
       ],
     },
     {
@@ -26,10 +38,10 @@ const ebookCategories = [
           mrp: "₹220",
         },
         {
-          title: "The Fault in Our Stars",
-          image: "https://covers.openlibrary.org/b/id/8281994-L.jpg",
-          price: "₹130",
-          mrp: "₹190",
+          title: "The Midnight Library",
+          image: "https://covers.openlibrary.org/b/id/10553039-L.jpg",
+          price: "₹240",
+          mrp: "₹320",
         },
       ],
     },

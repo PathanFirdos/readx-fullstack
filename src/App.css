@@ -89,3 +89,26 @@
   padding: 10px;
   text-align: center;
 }
+
+.book-details-container {
+  background: linear-gradient(135deg, #e3f2fd, #ffffff);
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.book-card {
+  max-width: 900px;
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  margin: auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.book-image {
+  width: 250px;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}

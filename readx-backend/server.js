@@ -1,7 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -9,7 +8,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB
+// MongoDB Connection
 mongoose.connect("mongodb://localhost:27017/readx", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -17,18 +16,20 @@ mongoose.connect("mongodb://localhost:27017/readx", {
 .then(() => console.log("✅ MongoDB connected"))
 .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// Routes
+// Route Imports
 const audiobookRoutes = require("./routes/audiobooks");
 const ebookRoutes = require("./routes/ebooks");
 const comicRoutes = require("./routes/comics");
-const paymentRoutes = require("./routes/paymentRoutes");
+const paymentRoutes = require("./routes/paymentRoutes"); // ✅ Correct one
 
+// Mount Routes
 app.use("/api/audiobooks", audiobookRoutes);
 app.use("/api/ebooks", ebookRoutes);
 app.use("/api/comics", comicRoutes);
 app.use("/api/payment", paymentRoutes);
 
-// Server
+// Start Server
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
+

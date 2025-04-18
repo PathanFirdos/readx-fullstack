@@ -1,16 +1,11 @@
-
-
 import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import { useParams } from "react-router-dom";
 import { Container, Card, Button, Form } from "react-bootstrap";
-import { loadStripe } from "@stripe/stripe-js";
-import axios from "axios";
 import book1 from "./assets/book1.jpg";
 import book2 from "./assets/book2.jpg";
 import book3 from "./assets/book3.jpg";
-
-const stripePromise = loadStripe("pk_test_XXXXXXXXXXXXXXXX"); // your real public key
-
 
 const books = [
   {
@@ -40,6 +35,9 @@ const BookDetails = () => {
   const { title } = useParams();
   const book = books.find((b) => b.title === decodeURIComponent(title));
   const [rentalDuration, setRentalDuration] = useState("1_week");
+  const [formData, setFormData] = useState({ name: "", transactionId: "" });
+  const [submitted, setSubmitted] = useState(false);
+  const [showPaymentOptions, setShowPaymentOptions] = useState(false);
 
   const rentPercentages = {
     "1_week": 0.05,
@@ -53,38 +51,35 @@ const BookDetails = () => {
     return book.price * percentage;
   };
 
-  const handleRentNow = async () => {
-    const amount = calculateRent();
-  
-    const stripe = await stripePromise;
-  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/api/payment/create-checkout-session", {
+      const response = await fetch("http://localhost:5000/api/payment/submit-payment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title: book.title,
-          price: amount,
-          rentalDuration,
+          name: formData.name,
+          transactionId: formData.transactionId,
+          bookTitle: book.title,
         }),
       });
-  
-      const session = await response.json();
-  
-      if (session.id) {
-        await stripe.redirectToCheckout({ sessionId: session.id });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Payment submitted:", data);
+        setSubmitted(true);
+        toast.success("✅ Payment submitted successfully!");
       } else {
-        alert("Payment session creation failed.");
+        console.error("Submission failed:", data);
+        alert("Failed to submit payment. Please try again.");
       }
     } catch (error) {
-      alert("An error occurred while starting the payment session.");
-      console.error(error);
+      console.error("Error submitting payment:", error);
+      alert("Server error while submitting payment.");
     }
   };
-  
-  
 
   if (!book) {
     return (
@@ -95,19 +90,47 @@ const BookDetails = () => {
   }
 
   return (
-    <Container className="py-5">
-      <Card className="shadow-lg p-4 border-0 rounded" style={{ maxWidth: "800px", margin: "auto" }}>
+    <Container
+      className="py-4"
+      style={{
+        backgroundImage: "url('/bg-pattern.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "2rem",
+      }}
+    >
+      <Card
+        className="book-card"
+        style={{
+          width: "85%",
+          maxWidth: "800px",
+          backgroundColor: "rgba(255, 255, 255, 0.95)",
+          padding: "1.5rem",
+          borderRadius: "20px",
+          boxShadow: "0 8px 25px rgba(0, 0, 0, 0.15)",
+          border: "4px solid #4a90e2",
+        }}
+      >
         <div className="d-flex flex-wrap align-items-center">
           <img
             src={book.image}
             alt={book.title}
-            className="rounded me-4 mb-3"
-            style={{ width: "250px", height: "350px", objectFit: "cover" }}
+            style={{
+              width: "200px",
+              height: "300px",
+              objectFit: "cover",
+              borderRadius: "15px",
+              marginRight: "20px",
+            }}
           />
-          <div>
-            <h2>{book.title}</h2>
-            <h5 className="text-muted">by {book.author}</h5>
-            <p className="mt-3">{book.description}</p>
+          <div style={{ flex: 1 }}>
+            <h2 className="fw-bold text-dark">{book.title}</h2>
+            <h5 className="text-muted mb-3">by {book.author}</h5>
+            <p className="text-secondary">{book.description}</p>
 
             <Form.Group className="mb-3" controlId="rentalDuration">
               <Form.Label>Select Rental Duration</Form.Label>
@@ -122,16 +145,94 @@ const BookDetails = () => {
               </Form.Select>
             </Form.Group>
 
-            <h4 className="text-primary">
+            <h4 className="text-primary mt-4">
               Rent: ₹{calculateRent().toFixed(2)}
             </h4>
 
-            <Button variant="success" onClick={handleRentNow}>
-              Rent Now
+            <Button
+              variant="primary"
+              className="my-3"
+              onClick={() => setShowPaymentOptions(true)}
+            >
+              💳 Rent Now
             </Button>
+
+            {showPaymentOptions && (
+              <div className="my-3">
+                <h5 className="text-dark">Choose a Payment Option:</h5>
+                <div className="d-flex gap-3 flex-wrap">
+                <a
+  href={`upi://pay?pa=merchant@upi&pn=BookRental&am=${calculateRent().toFixed(2)}&cu=INR`}
+  style={{ textDecoration: 'none' }}
+>
+  <Button variant="outline-info">
+    📲 Pay with PhonePe
+  </Button>
+</a>
+
+
+                  <Button
+                    variant="outline-success"
+                    onClick={() => {
+                      const upiURL = `upi://pay?pa=merchant@upi&pn=BookRental&am=${calculateRent().toFixed(2)}&cu=INR`;
+                      window.location.href = upiURL;
+                    }}
+                  >
+                    💰 Pay with Google Pay
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            <Form onSubmit={handleSubmit}>
+              <Form.Group className="mb-2">
+                <Form.Label>Your Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-2">
+                <Form.Label>Transaction ID / UPI Ref No</Form.Label>
+                <Form.Control
+                  type="text"
+                  required
+                  value={formData.transactionId}
+                  onChange={(e) =>
+                    setFormData({ ...formData, transactionId: e.target.value })
+                  }
+                />
+              </Form.Group>
+
+              <Button type="submit" variant="success">
+                I Have Paid
+              </Button>
+            </Form>
+
+            {submitted && (
+              <>
+                <p className="mt-3 text-success fw-bold">
+                  ✅ Payment Submitted! We’ll verify and unlock access shortly.
+                </p>
+                <Button
+                  variant="primary"
+                  className="mt-3"
+                  href={`/books/${encodeURIComponent(book.title)}.pdf`}
+                  download
+                >
+                  📥 Download Book PDF
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </Card>
+      <ToastContainer position="top-center" autoClose={3000} hideProgressBar />
     </Container>
   );
 };
