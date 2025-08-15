@@ -1,0 +1,61 @@
+.welcome-container {
+    background-image: url("https://www.shutterstock.com/image-photo/book-stack-opened-on-desk-260nw-2318012963.jpg"); /* Bookshelf/reading corner */
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .overlay {
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 60px 40px;
+    text-align: center;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1.5s ease-in;
+  }
+  
+  .app-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #d6336c;
+    margin-bottom: 1rem;
+  }
+  
+  .headline {
+    font-size: 1.4rem;
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  
+  .start-button {
+    background-color: #d6336c;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .start-button:hover {
+    background-color: #b52c59;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

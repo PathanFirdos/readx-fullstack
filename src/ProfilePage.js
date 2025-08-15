@@ -1,83 +1,72 @@
-import React, { useState, useEffect } from "react";
-import { Container, Tab, Tabs, ListGroup, Form, Button, Row, Col } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useUser } from "./UserContext"; // Import the useUser hook
+import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { Card, Container, Row, Col } from "react-bootstrap";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import logo from "./assets/settings.png"; // replace with your logo path
 
 const ProfilePage = () => {
+  const { isLoggedIn } = useUser(); // Get the login state
+  const navigate = useNavigate();
   const location = useLocation();
+  const { tab } = useParams(); // Get the dynamic tab parameter from the URL
 
-  // Function to extract query param (like ?tab=wishlist)
-  const getTabFromQuery = () => {
-    const params = new URLSearchParams(location.search);
-    return params.get("tab") || "orders"; // default to 'orders' tab
+  // Handle tab change
+  const handleTabChange = (newTab) => {
+    navigate(`/profile/${newTab}`);
   };
 
-  const [key, setKey] = useState(getTabFromQuery());
+  // Check if the current tab is active based on the URL
+  const isActive = (tabName) => location.pathname.includes(tabName);
 
-  // Sync tab change if URL changes
+  // Menu items for profile tabs
+  const menuItems = [
+    { key: "settings", label: "Personal Settings", icon: <i className="bi bi-person-gear fs-3 text-danger" /> },
+    { key: "orders", label: "My Orders", icon: <i className="bi bi-box-seam fs-3 text-danger" /> },
+    { key: "wishlist", label: "My Wishlist", icon: <i className="bi bi-heart fs-3 text-danger" /> },
+    { key: "certificates", label: "My Gift Certificates", icon: <i className="bi bi-gift fs-3 text-danger" /> },
+    { key: "address", label: "My Address", icon: <i className="bi bi-geo-alt fs-3 text-danger" /> },
+    { key: "password", label: "Change Password", icon: <i className="bi bi-lock fs-3 text-danger" /> },
+  ];
+
   useEffect(() => {
-    const currentTab = getTabFromQuery();
-    setKey(currentTab);
-  }, [location.search]);
+    if (!isLoggedIn) {
+      navigate("/auth");
+    }
+  }, [isLoggedIn, navigate]);
+
+  if (!isLoggedIn) {
+    return <div>Redirecting to login...</div>;
+  }
 
   return (
-    <Container className="py-4">
-      <h2 className="text-center mb-4 text-primary">👤 Your Profile</h2>
-      <Tabs activeKey={key} onSelect={(k) => setKey(k)} className="mb-3 justify-content-center" fill>
-        <Tab eventKey="orders" title="Your Orders">
-          <ListGroup>
-            <ListGroup.Item>Order #1001 - ₹249 - Delivered</ListGroup.Item>
-            <ListGroup.Item>Order #1002 - ₹199 - In Transit</ListGroup.Item>
-          </ListGroup>
-        </Tab>
+    <Container className="py-5">
+      <div className="text-center mb-4">
+        <img src={logo} alt="Logo" height="80" className="mb-2" />
+        <h3 className="text-danger">My Account</h3>
+      </div>
 
-        <Tab eventKey="wishlist" title="Wishlist">
-          <ListGroup>
-            <ListGroup.Item>📘 The Art of Mindful Reading</ListGroup.Item>
-            <ListGroup.Item>📕 Can We Be Strangers Again?</ListGroup.Item>
-          </ListGroup>
-        </Tab>
+      <Row xs={1} sm={2} md={3} className="g-4 justify-content-center">
+        {menuItems.map((item) => (
+          <Col key={item.key} className="d-flex justify-content-center">
+            <Card
+              className={`text-center p-3 shadow-sm border-0 ${isActive(item.key) ? 'bg-light' : 'hover-shadow'}`}
+              style={{ width: "200px", cursor: "pointer" }}
+              onClick={() => handleTabChange(item.key)}
+            >
+              <div className="mb-2">{item.icon}</div>
+              <div className="fw-semibold text-dark">{item.label}</div>
+            </Card>
+          </Col>
+        ))}
+      </Row>
 
-        <Tab eventKey="address" title="Your Address">
-          <Form>
-            <Form.Group className="mb-3" controlId="formAddress">
-              <Form.Label>Street Address</Form.Label>
-              <Form.Control type="text" placeholder="123 Main St" />
-            </Form.Group>
-            <Row>
-              <Col>
-                <Form.Group className="mb-3" controlId="formCity">
-                  <Form.Label>City</Form.Label>
-                  <Form.Control type="text" placeholder="Mumbai" />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group className="mb-3" controlId="formZip">
-                  <Form.Label>Zip Code</Form.Label>
-                  <Form.Control type="text" placeholder="400001" />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Button variant="primary">Save Address</Button>
-          </Form>
-        </Tab>
-
-        <Tab eventKey="password" title="Change Password">
-          <Form>
-            <Form.Group className="mb-3" controlId="formOldPassword">
-              <Form.Label>Current Password</Form.Label>
-              <Form.Control type="password" placeholder="Enter current password" />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formNewPassword">
-              <Form.Label>New Password</Form.Label>
-              <Form.Control type="password" placeholder="Enter new password" />
-            </Form.Group>
-            <Button variant="warning">Update Password</Button>
-          </Form>
-        </Tab>
-      </Tabs>
+      <div className="mt-4">
+        <h4>{tab ? tab : "Welcome to your profile!"}</h4>
+        {/* Add dynamic content based on the selected tab */}
+      </div>
     </Container>
   );
 };
 
 export default ProfilePage;
-

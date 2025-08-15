@@ -1,0 +1,55 @@
+.category-card {
+    font-size: 1rem;
+    min-height: 80px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    border: 2px solid #ced4da; /* Default border color (light gray) */
+    background-color: #f8f9fa;
+    color: #212529;
+    padding: 1rem;
+    border-radius: 80px; /* Rounded corners */
+  }
+  
+  .category-card:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
+  }
+  
+  .selected-category {
+    background-color: #0d6efd !important;
+    color: white !important;
+    border-color: #0d6efd !important; /* Blue border for selected */
+  }
+  
+  .unselected-category {
+    background-color: #f8f9fa !important;
+    color: #212529 !important;
+    border-color: #53f8f8 !important; /* Light gray border for unselected */
+  }
+  
+  .continue-btn {
+    font-size: 0.95rem;
+    border: 2px solid #28a745;
+    color: #28a745;
+    transition: all 0.3s ease-in-out;
+    border-radius: 50px; /* Rounded pill shape */
+  }
+  
+  .continue-btn:hover {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .reset-btn {
+    font-size: 0.95rem;
+    border: 2px solid #ff4d6d;
+    color: #ff4d6d;
+    transition: all 0.3s ease-in-out;
+    border-radius: 50px; /* Rounded pill shape */
+  }
+  
+  .reset-btn:hover {
+    background-color: #ff4d6d;
+    color: white;
+  }
+  
