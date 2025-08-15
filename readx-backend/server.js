@@ -30,7 +30,6 @@ app.use("/api/payment", paymentRoutes);
 // Serve static books folder
 app.use("/books", express.static(path.join(__dirname, "books")));
 
-// Serve React frontend build
 const buildPath = path.join(__dirname, "../readx-app/build");
 app.use(express.static(buildPath));
 app.get("*", (req, res) => {
