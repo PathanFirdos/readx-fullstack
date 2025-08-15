@@ -2,7 +2,7 @@
   "name": "readx-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://firdospathan.github.io/readx-app",
+  "homepage": ".",
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@react-pdf-viewer/core": "^3.12.0",
