@@ -17,21 +17,18 @@ mongoose.connect(process.env.MONGO_URI)
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
 // API Routes
-const audiobookRoutes = require("./routes/audiobooks");
-const ebookRoutes = require("./routes/ebooks");
-const comicRoutes = require("./routes/comics");
-const paymentRoutes = require("./routes/paymentRoutes");
-
-app.use("/api/audiobooks", audiobookRoutes);
-app.use("/api/ebooks", ebookRoutes);
-app.use("/api/comics", comicRoutes);
-app.use("/api/payment", paymentRoutes);
+app.use("/api/audiobooks", require("./routes/audiobooks"));
+app.use("/api/ebooks", require("./routes/ebooks"));
+app.use("/api/comics", require("./routes/comics"));
+app.use("/api/payment", require("./routes/paymentRoutes"));
 
 // Serve static books folder
 app.use("/books", express.static(path.join(__dirname, "books")));
 
+// Serve React frontend build
 const buildPath = path.join(__dirname, "../readx-app/build");
 app.use(express.static(buildPath));
+
 app.get("*", (req, res) => {
   res.sendFile(path.join(buildPath, "index.html"));
 });
@@ -40,4 +37,5 @@ app.get("*", (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
+
 
