@@ -12,7 +12,10 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
@@ -25,12 +28,9 @@ app.use("/api/payment", require("./routes/paymentRoutes"));
 // Serve static books folder
 app.use("/books", express.static(path.join(__dirname, "books")));
 
-// Serve React frontend build
-const buildPath = path.join(__dirname, "../readx-app/build");
+// Serve React frontend
+const buildPath = path.join(__dirname, "../build");
 app.use(express.static(buildPath));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(buildPath, "index.html"));
-});
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(buildPath, "index.html"));
@@ -40,5 +40,3 @@ app.get("*", (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
-
-
